@@ -13,81 +13,91 @@ function init() {
 
 function addTeamMember() {
     inquirer.prompt([{
-        type: 'input',
-        name: 'name',
-        message: 'What is the name team member you would like to add?'
-    },
+                type: 'input',
+                name: 'name',
+                message: 'What is the name team member you would like to add?'
+            },
 
-    {
-        type: 'list',
-        name: 'role',
-        message: 'Please select the role of the team member you just added.',
-        choices: [
-            'Engineer',
-            'Intern',
-            'Manager',
-        ]
-    },
+            {
+                type: 'list',
+                name: 'role',
+                message: 'Please select the role of the team member you just added.',
+                choices: [
+                    'Engineer',
+                    'Intern',
+                    'Manager',
+                ]
+            },
 
-    {
-        type: 'input',
-        name: 'id',
-        message: 'What is the ID number of the team member you just added?'
-    },
+            {
+                type: 'input',
+                name: 'id',
+                message: 'What is the ID number of the team member you just added?'
+            },
 
-    {
-        type: 'input',
-        name: 'email',
-        message: 'What is the email address of the team member you just added?'
-    }])
+            {
+                type: 'input',
+                name: 'email',
+                message: 'What is the email address of the team member you just added?'
+            }
+        ])
 
-    .then(function({name, role, id, email}) {
-        let employeeInfo = "";
-        if (role === 'Engineer') {
-            employeeInfo = 'Github';
-        } else if (role === 'Intern') {
-            employeeInfo = 'school';
-        } else {
-            employeeInfo = 'officeNumber'
-        }
-
-        inquirer.prompt([{
-            type: 'input',
-            name: 'employeeInfo',
-            message: `Please enter the ${employeeInfo} of the member you just added.`
-        },
-    
-        {
-            type: 'list',
-            name: 'addMoreMembers',
-            message: 'Would you like to add another team member?',
-            choices: [
-                'yes',
-                'no'
-            ]
-        }])
-
-        .then(function({employeeInfo, addMoreMembers}) {
-            let newTeamMember;
+        .then(function ({
+            name,
+            role,
+            id,
+            email
+        }) {
+            let employeeInfo = "";
             if (role === 'Engineer') {
-                newTeamMember = new Engineer(name, id, email, employeeInfo);
+                employeeInfo = 'Github';
             } else if (role === 'Intern') {
-                newTeamMember = new Intern(name, id, email, employeeInfo);
-            } else if (role === 'Manager') {
-                newTeamMember = new Manager(name, id, email, employeeInfo);
+                employeeInfo = 'school';
+            } else {
+                employeeInfo = 'officeNumber'
             }
 
-            employeeNames.push(newTeamMember);
-            addHTML(newTeamMember)
-            .then(function() {
-                if (addMoreMembers === "yes") {
-                    addTeamMember();
-                } else {
-                    endHTML();
-                }
-            });
+            inquirer.prompt([{
+                        type: 'input',
+                        name: 'employeeInfo',
+                        message: `Please enter the ${employeeInfo} of the member you just added.`
+                    },
+
+                    {
+                        type: 'list',
+                        name: 'addMoreMembers',
+                        message: 'Would you like to add another team member?',
+                        choices: [
+                            'yes',
+                            'no'
+                        ]
+                    }
+                ])
+
+                .then(function ({
+                    employeeInfo,
+                    addMoreMembers
+                }) {
+                    let newTeamMember;
+                    if (role === 'Engineer') {
+                        newTeamMember = new Engineer(name, id, email, employeeInfo);
+                    } else if (role === 'Intern') {
+                        newTeamMember = new Intern(name, id, email, employeeInfo);
+                    } else if (role === 'Manager') {
+                        newTeamMember = new Manager(name, id, email, employeeInfo);
+                    }
+
+                    employeeNames.push(newTeamMember);
+                    addHTML(newTeamMember)
+                        .then(function () {
+                            if (addMoreMembers === "yes") {
+                                addTeamMember();
+                            } else {
+                                endHTML();
+                            }
+                        });
+                });
         });
-    });
 }
 
 function generateHTML() {
@@ -100,6 +110,7 @@ function generateHTML() {
         <title>Team Profile Generator</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css">
     </head>
     
     <body>
@@ -109,7 +120,7 @@ function generateHTML() {
         <div class="container">
             <div class="row">`;
 
-    fs.writeFile('./template/index.html', html, function(err) {
+    fs.writeFile('./template/index.html', html, function (err) {
         if (err) {
             console.log(err);
         }
@@ -118,7 +129,7 @@ function generateHTML() {
 }
 
 function addHTML(teamMember) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         const name = teamMember.getName();
         const role = teamMember.getRole();
         const id = teamMember.getId();
@@ -164,7 +175,7 @@ function addHTML(teamMember) {
         }
         console.log("adding team member");
         fs.appendFile('./template/index.html', teamData, function (err) {
-            if ( err) {
+            if (err) {
                 return reject(err);
             };
             return resolve();
@@ -179,7 +190,7 @@ function endHTML() {
 </body>
 </html>`;
 
-    fs.appendFile('./template/index.html', endHTML, function(err) {
+    fs.appendFile('./template/index.html', endHTML, function (err) {
         if (err) {
             console.log(err);
         };

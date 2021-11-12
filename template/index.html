@@ -1,48 +1,33 @@
 <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Team Profile Generator</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Our Team</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    </head>
-    
-    <body>
-        <nav class="navbar navbar-dark bg-danger mb-8">
-            <h1 class="navbar-brand m-4 w-100 text-center">Team Profile</h1>
-        </nav>
-        <div class="container">
-            <div class="row"><div class="col-sm">
-            <div class="card bg-primary mx-auto my-3" style="width: 18rem">
-            <h5 class="fas fa-glasses card-header text-center"><b>Meredith</b><br /><br />Engineer</h5>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><b>ID: </b>123</li>
-                <li class="list-group-item"><b>Email Address: </b>meredith.coyne@fakeemail.com</li>
-                <li class="list-group-item"><b>GitHub: </b>meredithcoyne</li>
-            </ul>
+    <link href="https://fonts.googleapis.com/css?family=Merriweather|Muli:300" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/c502137733.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 jumbotron mb-3 team-heading">
+                <h1 class="text-center">Our <span>Team</span></h1>
             </div>
-        </div><div class="col-sm">
-            <div class="card bg-primary mx-auto my-3" style="width: 18rem">
-            <h5 class="fas fa-user-graduate card-header text-center"><b>John</b><br /><br />Intern</h5>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><b>ID: </b>456</li>
-                <li class="list-group-item"><b>Email Address: </b>JohnDoe@fakeemail.com</li>
-                <li class="list-group-item"><b>School: </b>FakeU</li>
-            </ul>
-            </div>
-        </div><div class="col-sm">
-            <div class="card bg-primary mx-auto my-3" style="width: 18rem">
-            <h5 class="fas fa-user-graduate card-header text-center"><b>Jane</b><br /><br />Intern</h5>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><b>ID: </b>789</li>
-                <li class="list-group-item"><b>Email Address: </b>JaneDoe@fakeemail.com</li>
-                <li class="list-group-item"><b>School: </b>FakeU</li>
-            </ul>
-            </div>
-        </div> </div>
+        </div>
     </div>
-    
+    <div class="container">
+        <div class="row">
+            <div class="team-area col-12 d-flex justify-content-center mt-5">
+                {{ team }}
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

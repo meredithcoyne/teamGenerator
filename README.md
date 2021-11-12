@@ -28,7 +28,9 @@ command line application
 ## Demo_Screenshots
 ------------------
 ### HTML Screenshot
-
+![Team Generator Demo](assets\teamGenerator.png)
+### Video Demo
+![Team Generator Demo](assets\teamGenerator.mp4)
 ## License
 ------------------
   Meredith Coyne Copyright 2021

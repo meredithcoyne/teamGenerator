@@ -31,10 +31,13 @@ body {
 
 .card-header {
     background: #152C40;
+
 }
 
 .card-body {
     color: #53799b;
+    font-weight: bold;
+    font-size: 20px;
 }
 
 a {

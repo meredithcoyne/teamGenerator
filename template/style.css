@@ -18,7 +18,8 @@ span {
 body {
     Font-Family: 'Arial Narrow', Sans-Serif;
     background-color: #2e879b;
-    color: #DCEEF2;
+    color: #18839b;
+    font-size: 20px;
 }
 
 .jumbotron {
@@ -27,10 +28,13 @@ body {
 
 .employee-card {
     box-shadow: 5px 3px 9px 1px #465E73;
+    
 }
 
 .card-header {
     background: #152C40;
+    font-size: 25px;
+    color: #fff;
 
 }
 
@@ -38,6 +42,7 @@ body {
     color: #53799b;
     font-weight: bold;
     font-size: 20px;
+    
 }
 
 a {

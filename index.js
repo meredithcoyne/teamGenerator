@@ -104,21 +104,27 @@ function generateHTML() {
     const html = `<!DOCTYPE html>
     <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Team Profile Generator</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Our Team</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="style.css">
-    </head>
+    <link href="https://fonts.googleapis.com/css?family=Merriweather|Muli:300" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/c502137733.js"></script>
+</head>
     
     <body>
-        <nav class="navbar navbar-dark bg-danger mb-8">
-            <h1 class="navbar-brand m-4 w-100 text-center">Team Profile</h1>
-        </nav>
-        <div class="container">
-            <div class="row">`;
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-12 jumbotron mb-3 team-heading">
+            <h1 class="text-center">Our <span>Team</span></h1>
+        </div>
+    </div>
+</div>
+<div class="container">
+<div class="row">`;
 
     fs.writeFile('./template/index.html', html, function (err) {
         if (err) {
@@ -138,16 +144,20 @@ function addHTML(teamMember) {
         let teamData = "";
         if (role === 'Engineer') {
             const gitHub = teamMember.getGithub();
-            teamData = `<div class="col-sm">
-            <div class="card bg-primary mx-auto my-3" style="width: 18rem">
-            <h5 class="fas fa-glasses card-header text-center"><b>${name}</b><br /><br />Engineer</h5>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><b>ID: </b>${id}</li>
-                <li class="list-group-item"><b>Email Address: </b>${email}</li>
-                <li class="list-group-item"><b>GitHub: </b>${gitHub}</li>
-            </ul>
-            </div>
-        </div>`;
+            teamData = `<div class="team-area col-12 d-flex justify-content-center mt-5">
+            <div class="card employee-card mr-4 ml-4 mb-3">
+<div class="card-header text-center">
+    <h2 class="card-title">${name}</h2>
+    <h3 class="card-title"><i class="fas fa-mug-hot mr-2"></i>Manager</h3>
+</div>
+<div class="card-body">
+    <ul class="list-group">
+    <li class="list-group-item"><b>ID: </b>${id}</li>
+        <li class="list-group-item"><b>Email Address: </b>${email}</li>
+        <li class="list-group-item"><b>Office Number: </b>${officeNumber}</li>
+    </ul>
+</div>
+</div>`;
         } else if (role === 'Intern') {
             const school = teamMember.getSchool();
             teamData = `<div class="col-sm">

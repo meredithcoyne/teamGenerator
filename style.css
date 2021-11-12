@@ -1,0 +1,47 @@
+h1 {
+    Font-Family: 'Comic Sans MS', 'Comic Sans' Serif;
+    font-size: 45px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    font-weight: bolder;
+}
+
+h2 {
+    font-weight: bold;
+}
+
+span {
+    opacity: 0.6;
+}
+
+body {
+    Font-Family: 'Arial Narrow', Sans-Serif;
+    background-color: #5fcde6;
+    color: #DCEEF2;
+}
+
+.jumbotron {
+    background: #152C40;
+}
+
+.employee-card {
+    box-shadow: 5px 3px 9px 1px #465E73;
+}
+
+.card-header {
+    background: #152C40;
+}
+
+.card-body {
+    color: #465E73;
+}
+
+a {
+    color: #3db35e;
+}
+
+a:hover {
+    color: #D9B991;
+    text-decoration: none;
+    text-transform: uppercase;
+}

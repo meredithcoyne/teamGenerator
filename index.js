@@ -1,211 +1,190 @@
-const fs = require('fs');
-const inquirer = require('inquirer');
-const Engineer = require('./lib/Engineer');
-const Intern = require('./lib/Intern');
-const Manager = require('./lib/Manager');
+const Manager = require("./lib/Manager");
+const Engineer = require("./lib/Engineer");
+const Intern = require("./lib/Intern");
+const inquirer = require("inquirer");
+const path = require("path");
+const fs = require("fs");
 
-const employeeNames = [];
+const OUTPUT_DIR = path.resolve(__dirname, "output");
+const outputPath = path.join(OUTPUT_DIR, "team.html");
 
-function init() {
-    generateHTML();
-    addTeamMember();
-}
+const render = require("./lib/htmlRenderer");
+const Employee = require("./lib/Employee");
 
-function addTeamMember() {
-    inquirer.prompt([{
-                type: 'input',
-                name: 'name',
-                message: 'What is the name team member you would like to add?'
+let team = [];
+let canAddManager = true;
+
+// Write code to use inquirer to gather information about the development team members, and to create objects for each team member (using the correct classes as blueprints!)
+const questions = {
+    Manager: [{
+            type: "input",
+            name: "name",
+            message: "What is the manager's name?",
+        },
+        {
+            type: "input",
+            name: "id",
+            message: "What is the manager's id?",
+        },
+        {
+            type: "input",
+            name: "email",
+            message: "What is the manager's email address?",
+        },
+        {
+            type: "input",
+            name: "officeNumber",
+            message: "What is the manager's office number?",
+        },
+        {
+            type: "list",
+            name: "addNew",
+            message: "Do you want to add another employee",
+            choices: ["yes", "no"]
+        }
+    ],
+
+    Engineer: [{
+            type: "input",
+            name: "name",
+            message: "What is the engineer's name?",
+        },
+        {
+            type: "input",
+            name: "id",
+            message: "What is the engineer's id?",
+        },
+        {
+            type: "input",
+            name: "email",
+            message: "What is the engineer's email address?",
+        },
+        {
+            type: "input",
+            name: "github",
+            message: "What is the engineer's GitHub username?",
+        },
+        {
+            type: "list",
+            name: "addNew",
+            message: "Do you want to add another employee",
+            choices: ["yes", "no"]
+        }
+    ],
+
+    Intern: [{
+            type: "input",
+            name: "name",
+            message: "What is the intern's name?",
             },
-
-            {
-                type: 'list',
-                name: 'role',
-                message: 'Please select the role of the team member you just added.',
-                choices: [
-                    'Engineer',
-                    'Intern',
-                    'Manager',
-                ]
+        {
+            type: "input",
+            name: "id",
+            message: "What is the intern's id?",
+           },
+        {
+            type: "input",
+            name: "email",
+            message: "What is the intern's email address?",
             },
-
-            {
-                type: 'input',
-                name: 'id',
-                message: 'What is the ID number of the team member you just added?'
+        {
+            type: "input",
+            name: "school",
+            message: "What school is the intern attending?",
             },
+        {
+            type: "list",
+            name: "addNew",
+            message: "Do you want to add another employee",
+            choices: ["yes", "no"]
+        }
+    ]
+};
 
-            {
-                type: 'input',
-                name: 'email',
-                message: 'What is the email address of the team member you just added?'
-            }
-        ])
+const selectMemberType = [{
+    type: "list",
+    name: "memberType",
+    message: "Please choose the role for the employee",
+    choices: ["Manager", "Engineer", "Intern"],
+}];
 
-        .then(function ({
-            name,
-            role,
-            id,
-            email
-        }) {
-            let employeeInfo = "";
-            if (role === 'Engineer') {
-                employeeInfo = 'Github';
-            } else if (role === 'Intern') {
-                employeeInfo = 'school';
-            } else {
-                employeeInfo = 'officeNumber'
-            }
+function addNewMember() {
+    inquirer.prompt(selectMemberType)
+        .then(answer => {
+            // console.log(answer.memberType);
 
-            inquirer.prompt([{
-                        type: 'input',
-                        name: 'employeeInfo',
-                        message: `Please enter the ${employeeInfo} of the member you just added.`
-                    },
+            if (answer.memberType === "Manager") {
+                if (canAddManager) {
+                    inquirer.prompt(questions.Manager)
+                        .then(answer => {
+                            //save employee info
+                            const manager = new Manager(
+                                answer.name,
+                                answer.id,
+                                answer.email,
+                                answer.officeNumber
+                            );
 
-                    {
-                        type: 'list',
-                        name: 'addMoreMembers',
-                        message: 'Would you like to add another team member?',
-                        choices: [
-                            'yes',
-                            'no'
-                        ]
-                    }
-                ])
-
-                .then(function ({
-                    employeeInfo,
-                    addMoreMembers
-                }) {
-                    let newTeamMember;
-                    if (role === 'Engineer') {
-                        newTeamMember = new Engineer(name, id, email, employeeInfo);
-                    } else if (role === 'Intern') {
-                        newTeamMember = new Intern(name, id, email, employeeInfo);
-                    } else if (role === 'Manager') {
-                        newTeamMember = new Manager(name, id, email, employeeInfo);
-                    }
-
-                    employeeNames.push(newTeamMember);
-                    addHTML(newTeamMember)
-                        .then(function () {
-                            if (addMoreMembers === "yes") {
-                                addTeamMember();
+                            //add info to team array if manager doesn't exist
+                            team.push(manager);
+                            canAddManager = false;
+                            if (answer.addNew === "yes") {
+                                addNewMember();
                             } else {
-                                endHTML();
+                                generate();
                             }
                         });
-                });
-        });
-}
+                } else {
+                    //only 1 manager
+                    console.log("There is a manager already!")
+                    addNewMember();
+                }
 
-function generateHTML() {
-    const html = `<!DOCTYPE html>
-    <html lang="en">
-    <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Our Team</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Merriweather|Muli:300" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://kit.fontawesome.com/c502137733.js"></script>
-</head>
-    
-    <body>
-    <div class="container-fluid">
-    <div class="row">
-        <div class="col-12 jumbotron mb-3 team-heading">
-            <h1 class="text-center">Our <span>Team</span></h1>
-        </div>
-    </div>
-</div>
-<div class="container">
-<div class="row">`;
 
-    fs.writeFile('./template/index.html', html, function (err) {
-        if (err) {
-            console.log(err);
-        }
-    });
-    console.log('starting HTML');
-}
+            } else if (answer.memberType === "Engineer") {
+                inquirer.prompt(questions.Engineer)
+                    .then(answer => {
+                        //save ee info
+                        const engineer = new Engineer(
+                            answer.name,
+                            answer.id,
+                            answer.email,
+                            answer.github
+                        );
+                        //add info to team array
+                        team.push(engineer);
+                        if (answer.addNew === "yes") {
+                            addNewMember();
+                        } else {
+                            generate();
+                        };
+                    });
 
-function addHTML(teamMember) {
-    return new Promise(function (resolve, reject) {
-        const name = teamMember.getName();
-        const role = teamMember.getRole();
-        const id = teamMember.getId();
-        const email = teamMember.getEmail();
-
-        let teamData = "";
-        if (role === 'Engineer') {
-            const gitHub = teamMember.getGithub();
-            teamData = `<div class="team-area col-12 d-flex justify-content-center mt-5">
-            <div class="card employee-card mr-4 ml-4 mb-3">
-<div class="card-header text-center">
-    <h2 class="card-title">${name}</h2>
-    <h3 class="card-title"><i class="fas fa-mug-hot mr-2"></i>Manager</h3>
-</div>
-<div class="card-body">
-    <ul class="list-group">
-    <li class="list-group-item"><b>ID: </b>${id}</li>
-        <li class="list-group-item"><b>Email Address: </b>${email}</li>
-        <li class="list-group-item"><b>Office Number: </b>${officeNumber}</li>
-    </ul>
-</div>
-</div>`;
-        } else if (role === 'Intern') {
-            const school = teamMember.getSchool();
-            teamData = `<div class="col-sm">
-            <div class="card bg-primary mx-auto my-3" style="width: 18rem">
-            <h5 class="fas fa-user-graduate card-header text-center"><b>${name}</b><br /><br />Intern</h5>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><b>ID: </b>${id}</li>
-                <li class="list-group-item"><b>Email Address: </b>${email}</li>
-                <li class="list-group-item"><b>School: </b>${school}</li>
-            </ul>
-            </div>
-        </div>`;
-        } else if (role === 'Manager') {
-            const officeNumber = teamMember.getOfficeNumber();
-            teamData = `<div class="col-sm">
-            <div class="card bg-primary mx-auto my-3" style="width: 18rem">
-            <h5 class="fas fa-mug-hot card-header text-center"><b>${name}</b><br /><br />Manager</h5>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><b>ID: </b>${id}</li>
-                <li class="list-group-item"><b>Email Address: </b>${email}</li>
-                <li class="list-group-item"><b>Office Number </b>${officeNumber}</li>
-            </ul>
-            </div>
-        </div>`;
-        }
-        console.log("adding team member");
-        fs.appendFile('./template/index.html', teamData, function (err) {
-            if (err) {
-                return reject(err);
+            } else if (answer.memberType === "Intern") {
+                inquirer.prompt(questions.Intern)
+                    .then(answer => {
+                        //save ee info
+                        const intern = new Intern(
+                            answer.name,
+                            answer.id,
+                            answer.email,
+                            answer.school
+                        );
+                        //add info to team array
+                        team.push(intern);
+                        if (answer.addNew === "yes") {
+                            addNewMember();
+                        } else {
+                            generate();
+                        };
+                    });
             };
-            return resolve();
         });
-    });
+};
+
+addNewMember();
+
+function generate() {
+    fs.writeFileSync(outputPath, render(team), "utf-8");
+    process.exit(0);
 }
-
-function endHTML() {
-    const endHTML = ` </div>
-    </div>
-    
-</body>
-</html>`;
-
-    fs.appendFile('./template/index.html', endHTML, function (err) {
-        if (err) {
-            console.log(err);
-        };
-    });
-    console.log('end of HTML');
-}
-
-init();
